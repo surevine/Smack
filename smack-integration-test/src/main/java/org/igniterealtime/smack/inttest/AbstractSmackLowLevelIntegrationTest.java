@@ -18,11 +18,16 @@ package org.igniterealtime.smack.inttest;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
 
 import javax.net.ssl.SSLContext;
 
+import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jxmpp.jid.DomainBareJid;
 
 import eu.geekplace.javapinning.JavaPinning;
@@ -60,7 +65,16 @@ public abstract class AbstractSmackLowLevelIntegrationTest extends AbstractSmack
         try {
             callback.connectionCallback(connection);
         } finally {
+
+            try {
+                AccountManager.getInstance(connection).deleteAccount();
+                LOGGER.info("Successfully deleted account of " + connection);
+            } catch (NoResponseException | XMPPErrorException | NotConnectedException | InterruptedException e) {
+                LOGGER.log(Level.SEVERE, "Could not delete account of " + connection, e);
+            }
+
             connection.disconnect();
+
         }
     }
 

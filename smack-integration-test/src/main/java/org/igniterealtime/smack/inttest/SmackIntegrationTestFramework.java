@@ -453,7 +453,7 @@ public class SmackIntegrationTestFramework {
             for (int i = 0; i < numberOfConnections; ++i) {
                 try {
                     AccountManager.getInstance(connections[i]).deleteAccount();
-                    LOGGER.info("Successfully deleted account of" + connections[i]);
+                    LOGGER.info("Successfully deleted account of " + connections[i]);
                 }
                 catch (NoResponseException | XMPPErrorException | NotConnectedException
                                 | InterruptedException e) {
