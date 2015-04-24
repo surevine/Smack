@@ -45,7 +45,7 @@ public class FileTransferIntegrationTest extends AbstractSmackIntegrationTest {
 
     private static final byte[] dataToSend = StringUtils.randomString(1024 * 4 * 5).getBytes();
 
-    @SmackIntegrationTest
+    // @SmackIntegrationTest
     public void fileTransferTest() throws Exception {
         genericfileTransferTest();
     }
