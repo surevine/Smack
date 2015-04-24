@@ -436,7 +436,9 @@ public class SmackIntegrationTestFramework {
             }
             connections = new XMPPTCPConnection[numberOfConnections];
             for (int i = 0; i < numberOfConnections; ++i) {
-                connections[i] = getConnectedConnection(config);
+                String username = test.getClass().getSimpleName().toLowerCase() + "-testrunid-"
+                                + testRunResult.testRunId + "-user-" + String.valueOf(i);
+                connections[i] = getConnectedConnection(config, username);
             }
         }
         catch (Exception e) {
@@ -540,10 +542,10 @@ public class SmackIntegrationTestFramework {
             throw new IllegalStateException();
         }
         if (StringUtils.isNullOrEmpty(accountUsername)) {
-            accountUsername = USERNAME_PREFIX + '-' + middlefix + '-' +testRunResult.testRunId;
+            accountUsername = USERNAME_PREFIX + '-' + middlefix + '-' + testRunResult.testRunId;
         }
         if (StringUtils.isNullOrEmpty(accountPassword)) {
-            accountPassword = StringUtils.randomString(16);
+            accountPassword = "password";
         }
         // @formatter:off
         Builder builder = XMPPTCPConnectionConfiguration.builder()
@@ -573,9 +575,9 @@ public class SmackIntegrationTestFramework {
         return connection;
     }
 
-    static XMPPTCPConnection getConnectedConnection(Configuration config)
-                    throws KeyManagementException, NoSuchAlgorithmException, InterruptedException,
-                    SmackException, IOException, XMPPException {
+    static XMPPTCPConnection getConnectedConnection(Configuration config, String username)
+            throws KeyManagementException, NoSuchAlgorithmException, InterruptedException, SmackException, IOException,
+            XMPPException {
         XMPPTCPConnectionConfiguration.Builder builder = XMPPTCPConnectionConfiguration.builder();
         if (config.serviceTlsPin != null) {
             SSLContext sc = JavaPinning.forPin(config.serviceTlsPin);
@@ -585,7 +587,7 @@ public class SmackIntegrationTestFramework {
         builder.setServiceName(config.service);
         XMPPTCPConnection connection = new XMPPTCPConnection(builder.build());
         connection.connect();
-        UsernameAndPassword uap = IntTestUtil.registerAccount(connection);
+        UsernameAndPassword uap = IntTestUtil.registerAccount(connection, username, "password");
         connection.login(uap.username, uap.password);
         return connection;
     }
@@ -611,7 +613,7 @@ public class SmackIntegrationTestFramework {
     }
 
     public static final class TestRunResult {
-        public final String testRunId = StringUtils.randomString(5);
+        public final String testRunId = String.valueOf(System.currentTimeMillis());
         private final List<SuccessfulTest> successfulTests = Collections.synchronizedList(new LinkedList<SuccessfulTest>());
         private final List<FailedTest> failedIntegrationTests = Collections.synchronizedList(new LinkedList<FailedTest>());
         private final List<TestNotPossible> impossibleTestMethods = Collections.synchronizedList(new LinkedList<TestNotPossible>());

@@ -61,9 +61,11 @@ public abstract class AbstractSmackLowLevelIntegrationTest extends AbstractSmack
     }
 
     protected void performCheck(ConnectionCallback callback) throws Exception {
-        XMPPTCPConnection connection = SmackIntegrationTestFramework.getConnectedConnection(configuration);
+        XMPPTCPConnection connection = SmackIntegrationTestFramework.getConnectedConnection(configuration,
+                        "performcheck-testrunid-" + testRunId);
         try {
             callback.connectionCallback(connection);
+
         } finally {
 
             try {

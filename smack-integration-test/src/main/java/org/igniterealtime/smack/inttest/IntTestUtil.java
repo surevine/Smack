@@ -24,17 +24,9 @@ import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
-import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 
 public class IntTestUtil {
-
-    public static UsernameAndPassword registerAccount(XMPPConnection connection)
-                    throws NoResponseException, XMPPErrorException, NotConnectedException,
-                    InterruptedException {
-        return registerAccount(connection, StringUtils.randomString(12),
-                        StringUtils.randomString(12));
-    }
 
     public static UsernameAndPassword registerAccount(XMPPConnection connection, String username,
                     String password) throws NoResponseException, XMPPErrorException,
